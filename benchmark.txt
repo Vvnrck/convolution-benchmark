@@ -1,0 +1,13 @@
+Results
+Pic.: 700x1000
+Kernel: 3x3
+
+C#            0.370s
+C++           0.624s
+cython        0.794s
+pypy          7.151s    (*)
+python        77s       (*)
+python+numpy  157s
+ironpy        1026s     (*)
+
+* - absolutely the same code
