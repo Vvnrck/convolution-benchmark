@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 typedef vector<vector<int>>   Matrix;
-typedef vector<vector<float>> FloatMatrix;
+typedef vector<vector<int>>   FloatMatrix;
 
 
 class RgbImage

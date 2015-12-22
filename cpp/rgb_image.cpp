@@ -19,11 +19,11 @@ RgbImage::RgbImage(int height, int width):
 	if (this->blur_kernel.size() == 0)
 	{
 		for (int row = 0; row < 3; row++)
-			this->blur_kernel.push_back(vector<float>(3));
+			this->blur_kernel.push_back(vector<int>(3));
 
-		blur_kernel[0][0] = 1.0 / 16; blur_kernel[0][1] = 1.0 / 8; blur_kernel[0][2] = 1.0 / 16;
-		blur_kernel[1][0] = 1.0 / 8;  blur_kernel[1][1] = 1.0 / 4; blur_kernel[1][2] = 1.0 / 8;
-		blur_kernel[2][0] = 1.0 / 16; blur_kernel[2][1] = 1.0 / 8; blur_kernel[2][2] = 1.0 / 16;
+		blur_kernel[0][0] = 16; blur_kernel[0][1] = 8; blur_kernel[0][2] = 16;
+		blur_kernel[1][0] = 8;  blur_kernel[1][1] = 4; blur_kernel[1][2] = 8;
+		blur_kernel[2][0] = 16; blur_kernel[2][1] = 8; blur_kernel[2][2] = 16;
 	}
 }
 
@@ -67,13 +67,6 @@ RgbImage* RgbImage::save(string path)
 RgbImage* RgbImage::_convolve(FloatMatrix& kernel)
 {
 	RgbImage* out = new RgbImage(this->height, this->width);
-	auto hit = [&](int row, int col) -> bool { 
-		return row >= 0 && row < this->height
-			&& col >= 0 && col < this->width; 
-	};
-	auto get_red = [&](int r, int c) -> int { return hit(r, c) ? this->red[r][c] : 0; };
-	auto get_grn = [&](int r, int c) -> int { return hit(r, c) ? this->grn[r][c] : 0; };
-	auto get_blu = [&](int r, int c) -> int { return hit(r, c) ? this->blu[r][c] : 0; };
 	int  kernel_width = kernel.size() / 2;
 	int  sum[3];
 
@@ -89,16 +82,16 @@ RgbImage* RgbImage::_convolve(FloatMatrix& kernel)
 		{
 			int row = base_row + row_offset;
 			int col = base_col + col_offset;
-			sum[0] += get_red(row, col) * kernel[row_offset][col_offset];
-			sum[1] += get_grn(row, col) * kernel[row_offset][col_offset];
-			sum[2] += get_grn(row, col) * kernel[row_offset][col_offset];
+			if (row >= 0 && row < this->height && col >= 0 && col < this->width) {
+				sum[0] += this->red[row][col] / kernel[row_offset][col_offset];
+				sum[1] += this->grn[row][col] / kernel[row_offset][col_offset];
+				sum[2] += this->blu[row][col] / kernel[row_offset][col_offset];
+			}
 		}
-
 		out->red[row_num][cell_num] = sum[0];
 		out->grn[row_num][cell_num] = sum[1];
 		out->blu[row_num][cell_num] = sum[2];
 	}
-
 	return out;
 }
 
