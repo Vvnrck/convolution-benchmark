@@ -17,7 +17,7 @@ void main(int argc, char** argv)
 
 	string in_file(argv[1]), out_file(argv[4]), bench(argv[5]);
 	int heigth = std::stoi(argv[2]), width = std::stoi(argv[3]);
-	auto image = (new RgbImage(heigth, width))->load(in_file);
+	auto image = (new RgbImage(heigth, width))->load2(in_file);
 
 	start = clock();
 	for (int _ = 0; _ < 100; _++)
